@@ -1,15 +1,21 @@
 
 Case 1:
 
+100 times 1GB copy, finished within 14.2 s, bandwidth at 14422 MiB/s, Read 7211 MiB/s and Write 7211 MiB/s
+
+Measured:
 NODE 1 Mem Read (MB/s) : 15713.33 --|
 NODE 1 Mem Write(MB/s) :  7953.73 --|
 NODE 1 Memory (MB/s):    23667.06 --|
 
 
-  69.81%  testFunc.static            [.] my_memcpy_erm_movsb
-  25.05%  [kernel]                   [k] change_protection
-   2.39%  [kernel]                   [k] vm_normal_page
-   0.18%  [ip6_tables]               [k] ip6t_do_table
+  74.70%  testFunc.static            [.] my_memcpy_erm_movsb
+  19.66%  [kernel]                   [k] change_protection
+   2.36%  [kernel]                   [k] vm_normal_page
+   0.18%  [kernel]                   [k] tasklet_action_common.isra.21
+   0.15%  [kernel]                   [k] _raw_spin_lock
+   0.13%  [kernel]                   [k] try_to_wake_up
+   0.12%  [ip6_tables]               [k] ip6t_do_table
    
    
        │   my_memcpy_erm_movsb():
@@ -18,35 +24,76 @@ NODE 1 Memory (MB/s):    23667.06 --|
   0.01 │     retq
   
   
+09:20:31 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+09:20:36 PM   48   97.41    0.00    2.00    0.00    0.00    0.60    0.00    0.00    0.00    0.00
+09:20:41 PM   48   97.60    0.00    1.80    0.00    0.00    0.60    0.00    0.00    0.00    0.00
+09:20:46 PM   48   97.80    0.00    2.00    0.00    0.00    0.20    0.00    0.00    0.00    0.00
+09:20:51 PM   48   97.60    0.00    2.00    0.00    0.00    0.40    0.00    0.00    0.00    0.00
+09:20:56 PM   48   97.60    0.00    1.60    0.00    0.00    0.80    0.00    0.00    0.00    0.00
 
 
+  
+  
+perf stat -e longest_lat_cache.miss,instructions:u,cycles:u -C 48 -I 1000 -a
+#           time             counts unit events
+
+
+     3.002133117          117897620      longest_lat_cache.miss
+     3.002133117              33563      instructions:u            #    0.00  insn per cycle
+     3.002133117         2901101947      cycles:u
+     4.003135168          117830511      longest_lat_cache.miss
+     4.003135168              33457      instructions:u            #    0.00  insn per cycle
+     4.003135168         2902523199      cycles:u
+     5.004132281          118231703      longest_lat_cache.miss
+     5.004132281              33631      instructions:u            #    0.00  insn per cycle
+     5.004132281         2934065455      cycles:u
+     6.005132822          117471803      longest_lat_cache.miss
+     6.005132822              34998      instructions:u            #    0.00  insn per cycle
+     6.005132822         2903608333      cycles:u
+     
+     
+    35.035596849          115529730      longest_lat_cache.miss
+    35.035596849           98730274      instructions              #    0.03  insn per cycle
+    35.035596849         3002985733      cycles
+    36.036598610          116394521      longest_lat_cache.miss
+    36.036598610           56621796      instructions              #    0.02  insn per cycle
+    36.036598610         3003009657      cycles
+    37.037598258          114842973      longest_lat_cache.miss
+    37.037598258           98808228      instructions              #    0.03  insn per cycle
+    37.037598258         3002994713      cycles
+     
+
+expr 116894977 \* 64 == 7481278528   (115529730      longest_lat_cache.miss)
+
+
+expr 57582503 \* 128 = 7370560384    (unc_cha_tor_inserts.ia_miss_drd）;  /* core and uncore seems like should not be mixed */
 
 perf stat -e  longest_lat_cache.miss,unc_cha_tor_inserts.ia_miss_llcprefdata,unc_cha_tor_inserts.ia_miss_drd,unc_cha_tor_inserts.ia_miss_crd,unc_cha_tor_inserts.ia_miss_llcprefrfo -C 48 -I 1000 -a
 #           time             counts unit events
-     1.000823472             508228      longest_lat_cache.miss
-     1.000823472           49704150      unc_cha_tor_inserts.ia_miss_llcprefdata
-     1.000823472           57661493      unc_cha_tor_inserts.ia_miss_drd
-     1.000823472             269116      unc_cha_tor_inserts.ia_miss_crd
-     1.000823472           68326746      unc_cha_tor_inserts.ia_miss_llcprefrfo
-     2.003600396             187960      longest_lat_cache.miss
-     2.003600396           49911618      unc_cha_tor_inserts.ia_miss_llcprefdata
-     2.003600396           57448206      unc_cha_tor_inserts.ia_miss_drd
-     2.003600396             211353      unc_cha_tor_inserts.ia_miss_crd
-     2.003600396           68457867      unc_cha_tor_inserts.ia_miss_llcprefrfo
-     3.006294871             207068      longest_lat_cache.miss
-     3.006294871           49839242      unc_cha_tor_inserts.ia_miss_llcprefdata
-     3.006294871           57141224      unc_cha_tor_inserts.ia_miss_drd
-     3.006294871             256861      unc_cha_tor_inserts.ia_miss_crd
-     3.006294871           68485147      unc_cha_tor_inserts.ia_miss_llcprefrfo
-     4.009260624             242883      longest_lat_cache.miss
-     4.009260624           50637292      unc_cha_tor_inserts.ia_miss_llcprefdata
-     4.009260624           57381521      unc_cha_tor_inserts.ia_miss_drd
-     4.009260624             229951      unc_cha_tor_inserts.ia_miss_crd
-     4.009260624           69633358      unc_cha_tor_inserts.ia_miss_llcprefrfo
-     5.016232804             163875      longest_lat_cache.miss
-     5.016232804           50207441      unc_cha_tor_inserts.ia_miss_llcprefdata
-     5.016232804           57554110      unc_cha_tor_inserts.ia_miss_drd
-     5.016232804             174747      unc_cha_tor_inserts.ia_miss_crd
-     5.016232804           68709937      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     1.001036073             661868      longest_lat_cache.miss
+     1.001036073           47550470      unc_cha_tor_inserts.ia_miss_llcprefdata
+     1.001036073           58678524      unc_cha_tor_inserts.ia_miss_drd
+     1.001036073             238980      unc_cha_tor_inserts.ia_miss_crd
+     1.001036073           66150966      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     2.007599154             609649      longest_lat_cache.miss
+     2.007599154           48166184      unc_cha_tor_inserts.ia_miss_llcprefdata
+     2.007599154           58473121      unc_cha_tor_inserts.ia_miss_drd
+     2.007599154             176599      unc_cha_tor_inserts.ia_miss_crd
+     2.007599154           67592742      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     3.013723723             642247      longest_lat_cache.miss
+     3.013723723           47639383      unc_cha_tor_inserts.ia_miss_llcprefdata
+     3.013723723           58312289      unc_cha_tor_inserts.ia_miss_drd
+     3.013723723             193605      unc_cha_tor_inserts.ia_miss_crd
+     3.013723723           66690047      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     4.019730530             652779      longest_lat_cache.miss
+     4.019730530           47693838      unc_cha_tor_inserts.ia_miss_llcprefdata
+     4.019730530           58623442      unc_cha_tor_inserts.ia_miss_drd
+     4.019730530             183416      unc_cha_tor_inserts.ia_miss_crd
+     4.019730530           66434914      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     5.025897713            1388588      longest_lat_cache.miss
+     5.025897713           47821909      unc_cha_tor_inserts.ia_miss_llcprefdata
+     5.025897713           58513399      unc_cha_tor_inserts.ia_miss_drd
+     5.025897713             150014      unc_cha_tor_inserts.ia_miss_crd
+     5.025897713           66961780      unc_cha_tor_inserts.ia_miss_llcprefrfo
      
-     
+ 

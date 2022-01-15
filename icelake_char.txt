@@ -1,0 +1,52 @@
+
+Case 1:
+
+NODE 1 Mem Read (MB/s) : 15713.33 --|
+NODE 1 Mem Write(MB/s) :  7953.73 --|
+NODE 1 Memory (MB/s):    23667.06 --|
+
+
+  69.81%  testFunc.static            [.] my_memcpy_erm_movsb
+  25.05%  [kernel]                   [k] change_protection
+   2.39%  [kernel]                   [k] vm_normal_page
+   0.18%  [ip6_tables]               [k] ip6t_do_table
+   
+   
+       │   my_memcpy_erm_movsb():
+       │     mov  %rdx,%rcx
+ 99.99 │     rep  movsb %ds:(%rsi),%es:(%rdi)
+  0.01 │     retq
+  
+  
+
+
+
+perf stat -e  longest_lat_cache.miss,unc_cha_tor_inserts.ia_miss_llcprefdata,unc_cha_tor_inserts.ia_miss_drd,unc_cha_tor_inserts.ia_miss_crd,unc_cha_tor_inserts.ia_miss_llcprefrfo -C 48 -I 1000 -a
+#           time             counts unit events
+     1.000823472             508228      longest_lat_cache.miss
+     1.000823472           49704150      unc_cha_tor_inserts.ia_miss_llcprefdata
+     1.000823472           57661493      unc_cha_tor_inserts.ia_miss_drd
+     1.000823472             269116      unc_cha_tor_inserts.ia_miss_crd
+     1.000823472           68326746      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     2.003600396             187960      longest_lat_cache.miss
+     2.003600396           49911618      unc_cha_tor_inserts.ia_miss_llcprefdata
+     2.003600396           57448206      unc_cha_tor_inserts.ia_miss_drd
+     2.003600396             211353      unc_cha_tor_inserts.ia_miss_crd
+     2.003600396           68457867      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     3.006294871             207068      longest_lat_cache.miss
+     3.006294871           49839242      unc_cha_tor_inserts.ia_miss_llcprefdata
+     3.006294871           57141224      unc_cha_tor_inserts.ia_miss_drd
+     3.006294871             256861      unc_cha_tor_inserts.ia_miss_crd
+     3.006294871           68485147      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     4.009260624             242883      longest_lat_cache.miss
+     4.009260624           50637292      unc_cha_tor_inserts.ia_miss_llcprefdata
+     4.009260624           57381521      unc_cha_tor_inserts.ia_miss_drd
+     4.009260624             229951      unc_cha_tor_inserts.ia_miss_crd
+     4.009260624           69633358      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     5.016232804             163875      longest_lat_cache.miss
+     5.016232804           50207441      unc_cha_tor_inserts.ia_miss_llcprefdata
+     5.016232804           57554110      unc_cha_tor_inserts.ia_miss_drd
+     5.016232804             174747      unc_cha_tor_inserts.ia_miss_crd
+     5.016232804           68709937      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     
+     

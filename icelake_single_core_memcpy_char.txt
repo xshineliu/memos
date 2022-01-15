@@ -110,6 +110,13 @@ perf stat -e  longest_lat_cache.miss,unc_cha_tor_inserts.ia_miss_llcprefdata,unc
  
  with NT avx memcpy, finished in 9s
  
+ 
+ NODE 1 Mem Read (MB/s) : 15623.40 --|
+ NODE 1 Mem Write(MB/s) :  7872.89 --|
+ NODE 1 Memory (MB/s):    23496.29 --|
+ 
+ 
+ 
  73.21 │ 0:   vmovdqu  (%rsi),%ymm0
  11.32 │      vmovdqu  0x20(%rsi),%ymm1
   0.00 │      add      $0x40,%rsi
@@ -173,6 +180,10 @@ perf stat -e  longest_lat_cache.miss,unc_cha_tor_inserts.ia_miss_llcprefdata,unc
 case 3 
 
 almost 14.4s, 100 GiB ---> 100 GiB
+
+NODE 1 Mem Read (MB/s) : 12728.36 --|
+NODE 1 Mem Write(MB/s) : 12407.40 --|
+NODE 1 Memory (MB/s):    25135.76 --|
 
 
        │    my_memcpy_x64_avx():

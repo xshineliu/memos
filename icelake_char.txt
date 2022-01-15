@@ -166,3 +166,67 @@ perf stat -e  longest_lat_cache.miss,unc_cha_tor_inserts.ia_miss_llcprefdata,unc
     10.035977416           21115438      unc_cha_tor_inserts.ia_miss_drd
     10.035977416             215579      unc_cha_tor_inserts.ia_miss_crd
     10.035977416             848806      unc_cha_tor_inserts.ia_miss_llcprefrfo
+
+
+
+=========>
+case 3 
+
+almost 14.4s, 100 GiB ---> 100 GiB
+
+
+       │    my_memcpy_x64_avx():
+ 83.78 │ 0:   vmovdqu (%rsi),%ymm0
+  5.18 │      vmovdqu 0x20(%rsi),%ymm1
+  0.10 │      add     $0x40,%rsi
+  3.07 │      sub     $0x40,%rdx
+  1.41 │      vmovdqu %ymm0,(%rdi)
+  2.34 │      vmovdqu %ymm1,0x20(%rdi)
+  0.00 │      add     $0x40,%rdi
+       │      cmp     $0x0,%rdx
+  4.12 │      ja      0
+       │      sfence
+       │      retq
+       
+       
+  96.86%  testFunc.static   [.] my_memcpy_x64_avx
+   1.60%  [kernel]          [k] change_protection
+   0.20%  [kernel]          [k] vm_normal_page
+   0.16%  [kernel]          [k] _raw_spin_lock
+   0.14%  [kernel]          [k] run_timer_softirq
+       
+ 
+    17.017484754           70493687      longest_lat_cache.miss
+    17.017484754         1041681755      instructions:u            #    0.36  insn per cycle
+    17.017484754         2903849493      cycles:u
+    18.018481666           70312569      longest_lat_cache.miss
+    18.018481666         1042009081      instructions:u            #    0.36  insn per cycle
+    18.018481666         2901451341      cycles:u
+    19.019485291           70433365      longest_lat_cache.miss
+    19.019485291         1053896463      instructions:u            #    0.36  insn per cycle
+    19.019485291         2937299629      cycles:u
+ 
+ 
+     3.006422067             169839      longest_lat_cache.miss
+     3.006422067           79987599      unc_cha_tor_inserts.ia_miss_llcprefdata
+     3.006422067           28598830      unc_cha_tor_inserts.ia_miss_drd
+     3.006422067             236670      unc_cha_tor_inserts.ia_miss_crd
+     3.006422067           84748748      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     4.009109655             119471      longest_lat_cache.miss
+     4.009109655           80792001      unc_cha_tor_inserts.ia_miss_llcprefdata
+     4.009109655           28224088      unc_cha_tor_inserts.ia_miss_drd
+     4.009109655             138641      unc_cha_tor_inserts.ia_miss_crd
+     4.009109655           85475992      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     5.011797429             114533      longest_lat_cache.miss
+     5.011797429           79941422      unc_cha_tor_inserts.ia_miss_llcprefdata
+     5.011797429           28935255      unc_cha_tor_inserts.ia_miss_drd
+     5.011797429             176176      unc_cha_tor_inserts.ia_miss_crd
+     5.011797429           84384649      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     
+     
+     
+       
+
+
+   
+   

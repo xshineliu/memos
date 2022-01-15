@@ -1,4 +1,11 @@
 
+Intel(R) Xeon(R) Platinum 8336C  run at 3.0GHz
+
+================================
+ERMS is not with NT (non temperal store)
+================================
+
+
 Case 1:
 
 100 times 1GB copy, finished within 14.2 s, bandwidth at 14422 MiB/s, Read 7211 MiB/s and Write 7211 MiB/s
@@ -97,3 +104,65 @@ perf stat -e  longest_lat_cache.miss,unc_cha_tor_inserts.ia_miss_llcprefdata,unc
      5.025897713           66961780      unc_cha_tor_inserts.ia_miss_llcprefrfo
      
  
+ 
+=================>
+ Case 2:
+ 
+ with NT avx memcpy, finished in 9s
+ 
+ 73.21 │ 0:   vmovdqu  (%rsi),%ymm0
+ 11.32 │      vmovdqu  0x20(%rsi),%ymm1
+  0.00 │      add      $0x40,%rsi
+  4.91 │      sub      $0x40,%rdx
+  1.06 │      vmovntdq %ymm0,(%rdi)
+  3.00 │      vmovntdq %ymm1,0x20(%rdi)
+       │      add      $0x40,%rdi
+       │      cmp      $0x0,%rdx
+  6.51 │      ja       0
+       │      sfence
+       │      retq
+       
+185M loops per second, 32 bytes read, and 32 bytes write, 52 M L3 cache misses per seconds, 150M miss_llcprefdata
+       
+ 
+ Average:     121   98.62    0.00    1.38    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+ 
+ 
+  97.49%  testFunc.static    [.] my_memcpy_x64_avx_nt
+   1.31%  [kernel]           [k] change_protection
+   0.11%  [kernel]           [k] vm_normal_page
+   0.10%  [kernel]           [k] _raw_spin_lock
+   
+
+     3.002811873           52307510      longest_lat_cache.miss
+     3.002811873         1666469758      instructions:u            #    0.57  insn per cycle
+     3.002811873         2904932522      cycles:u
+     4.003812421           51732981      longest_lat_cache.miss
+     4.003812421         1683302346      instructions:u            #    0.57  insn per cycle
+     4.003812421         2937284547      cycles:u
+     5.004815241           52243751      longest_lat_cache.miss
+     5.004815241         1667586067      instructions:u            #    0.57  insn per cycle
+     5.004815241         2905181783      cycles:u
+
+
+(hardware level has aggresive prefetch, 3 times as longest_lat_cache.miss)
+     7.022368136             520279      longest_lat_cache.miss
+     7.022368136          149513525      unc_cha_tor_inserts.ia_miss_llcprefdata
+     7.022368136           21993673      unc_cha_tor_inserts.ia_miss_drd
+     7.022368136             167212      unc_cha_tor_inserts.ia_miss_crd
+     7.022368136             561207      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     8.027063876             172507      longest_lat_cache.miss
+     8.027063876          149575365      unc_cha_tor_inserts.ia_miss_llcprefdata
+     8.027063876           21577849      unc_cha_tor_inserts.ia_miss_drd
+     8.027063876             136508      unc_cha_tor_inserts.ia_miss_crd
+     8.027063876             515420      unc_cha_tor_inserts.ia_miss_llcprefrfo
+     9.033295062             121477      longest_lat_cache.miss
+     9.033295062          149403182      unc_cha_tor_inserts.ia_miss_llcprefdata
+     9.033295062           20692470      unc_cha_tor_inserts.ia_miss_drd
+     9.033295062              83758      unc_cha_tor_inserts.ia_miss_crd
+     9.033295062             396934      unc_cha_tor_inserts.ia_miss_llcprefrfo
+    10.035977416             190096      longest_lat_cache.miss
+    10.035977416          150696662      unc_cha_tor_inserts.ia_miss_llcprefdata
+    10.035977416           21115438      unc_cha_tor_inserts.ia_miss_drd
+    10.035977416             215579      unc_cha_tor_inserts.ia_miss_crd
+    10.035977416             848806      unc_cha_tor_inserts.ia_miss_llcprefrfo
